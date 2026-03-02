@@ -31,16 +31,22 @@ def clean_num(val):
         return 0.0
     except: return 0.0
 
-# --- 2. THE DESIGN: FIXED BUTTONS & STAR ENGINE ---
+# --- 2. THE DESIGN: REINFORCED EXPANDER & STAR ENGINE ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;700;900&family=Inter:wght@900&display=swap');
     
     .stApp { background-color: #000000; color: white !important; font-family: 'Montserrat', sans-serif; }
     
-    label, .stMarkdown p, .stExpander p { color: #FFFFFF !important; font-weight: 700 !important; text-transform: uppercase; letter-spacing: 2px; }
+    /* Global Label Visibility */
+    label, .stMarkdown p { 
+        color: #FFFFFF !important; 
+        font-weight: 700 !important; 
+        text-transform: uppercase; 
+        letter-spacing: 2px;
+    }
 
-    /* STAR ENGINE */
+    /* MASSIVE STAR ENGINE */
     .stApp::before {
         content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         background-image: 
@@ -48,21 +54,32 @@ st.markdown("""
             radial-gradient(12px 12px at 80% 80%, #37b36f, rgba(0,0,0,0)),
             radial-gradient(14px 14px at 20% 90%, #ffffff, rgba(0,0,0,0)),
             radial-gradient(10px 10px at 85% 15%, #37b36f, rgba(0,0,0,0));
-        background-repeat: repeat; background-size: 1000px 1000px; opacity: 1; z-index: -1;
-    }
-    .stApp::after {
-        content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background-image: radial-gradient(11px 11px at 25% 25%, #37b36f, rgba(0,0,0,0));
-        background-repeat: repeat; background-size: 800px 800px; opacity: 0.8; 
-        animation: stars-move 120s linear infinite; z-index: -1;
+        background-repeat: repeat; background-size: 1100px 1100px; opacity: 1; z-index: -1;
     }
     @keyframes stars-move { from { background-position: 0 0; } to { background-position: 0 -10000px; } }
 
-    /* --- CRITICAL BUTTON FIX: PREVENT WHITE-OUT --- */
-    /* Target all buttons to stay white text */
+    /* --- EXPANDER HEADER FIX (PREVENT WHITE-OUT) --- */
+    /* This targets the "Configure Your Project Scope" bar */
+    div.stExpander summary {
+        background-color: rgba(55, 179, 111, 0.1) !important;
+        border: 1px solid rgba(55, 179, 111, 0.5) !important;
+        color: white !important;
+        border-radius: 12px !important;
+    }
+
+    div.stExpander summary:hover, div.stExpander summary:focus, div.stExpander summary:active {
+        background-color: #1a6b4a !important; /* Stays dark green on hover */
+        color: white !important;
+    }
+    
+    div.stExpander summary p {
+        color: white !important;
+        font-weight: 900 !important;
+    }
+
+    /* --- BUTTONS FIX --- */
     button, p { color: white !important; }
 
-    /* Main Green Buttons (Add to Quotation / Clear All) */
     div.stButton > button:not([key^="del_"]) {
         background: linear-gradient(135deg, #1a6b4a 0%, #37b36f 100%) !important;
         border: none !important;
@@ -73,17 +90,13 @@ st.markdown("""
         border-radius: 8px !important;
     }
 
-    /* Force button to stay green on hover/focus/active */
-    div.stButton > button:not([key^="del_"]):hover, 
-    div.stButton > button:not([key^="del_"]):focus, 
-    div.stButton > button:not([key^="del_"]):active {
+    div.stButton > button:not([key^="del_"]):hover {
         background: #37b36f !important;
         color: white !important;
-        border: none !important;
         box-shadow: 0 0 20px rgba(55, 179, 111, 0.6) !important;
     }
 
-    /* Bin Icon Fix */
+    /* Bin Icon Persistence */
     div[key^="del_"] button {
         background-color: transparent !important;
         border: none !important;
@@ -96,12 +109,11 @@ st.markdown("""
         transform: scale(1.2);
     }
 
-    /* Expander Styling */
-    div.stExpander { 
-        border: 2px solid rgba(55, 179, 111, 0.7) !important; 
-        background: rgba(0, 0, 0, 0.85) !important; 
-        backdrop-filter: blur(20px); 
-        border-radius: 12px !important; 
+    /* Dropdown/Input Dark Mode */
+    div[data-baseweb="select"] > div, div[data-baseweb="popover"] > div, .stSelectbox div, .stNumberInput input {
+        background-color: #0a0a0a !important;
+        color: white !important;
+        border: 1px solid rgba(55, 179, 111, 0.4) !important;
     }
 
     .item-card { background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 10px; margin-bottom: 10px; border-left: 5px solid #37b36f; }
