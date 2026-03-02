@@ -64,7 +64,7 @@ st.markdown("""
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
     st.image("https://i.ibb.co/LzsV9Z6j/f774cc00-9f2e-4130-9644-1bddb2d6ae50.jpg", use_container_width=True)
-st.markdown("<h2 style='text-align: center; color: white; letter-spacing: 8px; font-weight: 200;'>ESTIMATE BUILDER</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align: center; color: white; letter-spacing: 8px; font-weight: 200;'>Price Calculator</h2>", unsafe_allow_html=True)
 
 # 4. Cart Logic
 if 'cart' not in st.session_state:
