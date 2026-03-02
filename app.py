@@ -166,41 +166,22 @@ st.markdown("""
 st.image("https://i.ibb.co/LzsV9Z6j/f774cc00-9f2e-4130-9644-1bddb2d6ae50.jpg")
 st.markdown("<h1 class='rich-header'>PRIME QUOTATION ENGINE</h1>", unsafe_allow_html=True)
 
-# 4. Global Project Memory
+# 4. Global Project Memory (Self-Healing Logic)
 if 'cart' not in st.session_state:
     st.session_state.cart = []
+
+# This block checks if the cart data is valid. If it's corrupted, it resets it.
+if st.session_state.cart:
+    try:
+        # Test if the first item has the required "name" key
+        test_key = st.session_state.cart[0]["name"]
+    except (KeyError, TypeError, IndexError):
+        # If not, the data is old/broken. Reset to empty.
+        st.session_state.cart = []
+        st.rerun()
+
 if 'use_demo_data' not in st.session_state:
     st.session_state.use_demo_data = False
-
-# Function to consolidate cart items
-def consolidate_cart(cart_items):
-    consolidated = {}
-    for item in cart_items:
-        key = item["name"]  # Use product name as key
-        if key in consolidated:
-            consolidated[key]["units"] += item["units"]
-            consolidated[key]["pkr"] += item["pkr"]
-            consolidated[key]["sar"] += item["sar"]
-            consolidated[key]["aed"] += item["aed"]
-        else:
-            consolidated[key] = item.copy()
-    return list(consolidated.values())
-
-# Function to create demo data if sheet is not accessible
-def get_demo_data():
-    demo_data = {
-        'Product Category': ['Architectural Design', 'Architectural Design', 'Interior Design', 'Interior Design', 
-                            'Construction', 'Construction', 'Project Management', 'Project Management'],
-        'Product': ['Residential Design', 'Commercial Design', 'Residential Interior', 'Commercial Interior',
-                   'Villa Construction', 'Apartment Renovation', 'Design Supervision', 'Construction Management'],
-        'Total Price (PKR)': ['PKR 500,000', 'PKR 1,200,000', 'PKR 350,000', 'PKR 800,000',
-                             'PKR 5,000,000', 'PKR 2,500,000', 'PKR 450,000', 'PKR 600,000'],
-        'Total Price (SAR)': ['SAR 7,500', 'SAR 18,000', 'SAR 5,250', 'SAR 12,000',
-                             'SAR 75,000', 'SAR 37,500', 'SAR 6,750', 'SAR 9,000'],
-        'Total Price (AED)': ['AED 7,200', 'AED 17,280', 'AED 5,040', 'AED 11,520',
-                             'AED 72,000', 'AED 36,000', 'AED 6,480', 'AED 8,640']
-    }
-    return pd.DataFrame(demo_data)
 
 # 5. Data Hub
 url = "https://docs.google.com/spreadsheets/d/1qvBKlYH7q4dXsu7tEh9OLnKSydfONNRzGa-xjUYLB0g/edit?usp=sharing"
