@@ -4,82 +4,86 @@ import pandas as pd
 
 # 1. Page Configuration
 st.set_page_config(page_title="Bayut Studios | Estimate Builder", layout="centered")
-# 2. Premium Design Layer (Pure CSS Glistening Stars)
+import streamlit as st
+from streamlit_gsheets import GSheetsConnection
+import pandas as pd
+
+# 1. Page Configuration
+st.set_page_config(page_title="Bayut Studios | Estimate Builder", layout="centered")
+
+# 2. Rich Midnight Starfield CSS
 st.markdown("""
     <style>
-    /* 1. Deep Space Background */
+    /* Rich Deep Navy Background */
     .stApp {
         background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
         color: white;
         overflow: hidden;
     }
 
-    /* 2. Generating the Stars using Box-Shadows */
-    /* Small Stars */
-    #stars {
-      width: 1px;
-      height: 1px;
-      background: transparent;
-      box-shadow: 1045px 105px #FFF , 207px 1012px #FFF , 500px 500px #FFF, 1200px 200px #FFF, 300px 800px #FFF, 1500px 600px #FFF, 100px 300px #FFF, 800px 100px #FFF, 400px 900px #FFF, 700px 400px #FFF;
-      animation: animStar 50s linear infinite;
-    }
-    #stars:after {
-      content: " ";
-      position: absolute;
-      top: 2000px;
-      width: 1px;
-      height: 1px;
-      background: transparent;
-      box-shadow: 1045px 105px #FFF , 207px 1012px #FFF , 500px 500px #FFF, 1200px 200px #FFF, 300px 800px #FFF, 1500px 600px #FFF;
+    /* Star Layer 1: Tiny & Many */
+    .stars-small {
+        position: fixed;
+        top: 0; left: 0; width: 2px; height: 2px;
+        background: transparent;
+        box-shadow: 454px 105px #FFF, 207px 1012px #FFF, 1200px 200px #FFF, 800px 900px #FFF, 300px 400px #FFF, 1500px 600px #FFF, 50px 800px #FFF, 950px 150px #FFF;
+        animation: animStar 50s linear infinite;
     }
 
-    /* Big Glistening Stars */
-    #stars2 {
-      width: 3px;
-      height: 3px;
-      background: transparent;
-      box-shadow: 200px 400px #FFF, 600px 100px #FFF, 1000px 800px #37b36f, 1400px 300px #FFF, 400px 700px #FFF;
-      animation: animStar 100s linear infinite, twinkle 3s ease-in-out infinite;
-      border-radius: 50%;
+    /* Star Layer 2: Medium & Glistening */
+    .stars-medium {
+        position: fixed;
+        top: 0; left: 0; width: 4px; height: 4px;
+        background: transparent;
+        box-shadow: 100px 300px #FFF, 700px 400px #FFF, 1400px 700px #37b36f, 500px 100px #FFF, 1100px 900px #FFF;
+        animation: animStar 100s linear infinite, twinkle 3s ease-in-out infinite;
+        border-radius: 50%;
     }
 
-    /* 3. Animations */
+    /* Animations */
     @keyframes animStar {
-      from { transform: translateY(0px); }
-      to { transform: translateY(-2000px); }
+        from { transform: translateY(0px); }
+        to { transform: translateY(-2000px); }
     }
-
     @keyframes twinkle {
-      0%, 100% { opacity: 0.3; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.5); }
+        0%, 100% { opacity: 0.4; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.4); filter: blur(1px); }
     }
 
-    /* 4. UI Elements - Glassmorphism */
+    /* Premium UI Styling */
     div.stExpander {
         border: 1px solid rgba(55, 179, 111, 0.3);
-        background: rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(15px);
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(20px);
         border-radius: 15px;
     }
-
     div.stButton > button {
         background-color: #1a6b4a !important;
         border: 1px solid #37b36f !important;
         box-shadow: 0 0 15px rgba(55, 179, 111, 0.4);
-        letter-spacing: 2px;
+        border-radius: 10px;
+        padding: 15px;
+    }
+    .total-card {
+        border: 2px solid #37b36f;
+        padding: 30px;
+        border-radius: 15px;
+        background: rgba(0, 0, 0, 0.6);
+        box-shadow: 0 10px 40px rgba(55, 179, 111, 0.2);
     }
     </style>
-
-    <div id='stars'></div>
-    <div id='stars2'></div>
+    
+    <div class="stars-small"></div>
+    <div class="stars-medium"></div>
     """, unsafe_allow_html=True)
-# 3. Header & Logo
+
+# 3. Logo & Brand
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
     st.image("https://i.ibb.co/LzsV9Z6j/f774cc00-9f2e-4130-9644-1bddb2d6ae50.jpg")
 st.markdown("<h3 style='text-align: center; color: white; letter-spacing: 5px; opacity: 0.9;'>ESTIMATE BUILDER</h3>", unsafe_allow_html=True)
-st.markdown("---")
 
+# --- REST OF YOUR LOGIC (Session State, Connection, Cart) REMAINS THE SAME ---
 # 4. Initialize Session State
 if 'cart' not in st.session_state:
     st.session_state.cart = []
