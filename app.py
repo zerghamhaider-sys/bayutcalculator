@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 
 # 1. Page Configuration
-st.set_page_config(page_title="Bayut Studios | Global Quotation Engine", layout="centered")
+st.set_page_config(page_title="Bayut Studios | Price Calculator", layout="centered")
 
 # --- FUNCTIONS DEFINED FIRST ---
 def consolidate_cart(cart_items):
@@ -12,7 +12,7 @@ def consolidate_cart(cart_items):
     for item in cart_items:
         if isinstance(item, dict) and "name" in item:
             key = item["name"]
-            if key in consolidated:
+            if key in consolidated
                 consolidated[key]["units"] += item["units"]
                 consolidated[key]["pkr"] += item["pkr"]
                 consolidated[key]["sar"] += item["sar"]
