@@ -3,9 +3,9 @@ from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 
 # 1. Page Configuration
-st.set_page_config(page_title="Bayut Studios | Price Calculator", layout="centered")
+st.set_page_config(page_title="Bayut Studios | Prime Quotation Engine", layout="centered")
 
-# 2. Premium Design: Massive Glistening Stars & UI Fixes
+# 2. Premium Design: Ultra-Visible Stars & Bold White Text
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;700;900&display=swap');
@@ -17,42 +17,31 @@ st.markdown("""
         font-family: 'Montserrat', sans-serif;
     }
 
-    /* FIX: Keep dropdowns dark and visible even on hover/focus */
-    div[data-baseweb="select"] > div, 
-    div[data-baseweb="popover"] > div,
-    .stSelectbox div, .stNumberInput input {
-        background-color: #000000 !important;
-        color: white !important;
-        border: 1px solid #37b36f !important;
-    }
-
     /* FORCED WHITE LABELS - High Visibility */
-    label, .stMarkdown p, .stExpander p, h3 {
+    label, .stMarkdown p, .stExpander p, .stSelectbox p {
         color: #FFFFFF !important;
         font-weight: 700 !important;
         text-transform: uppercase;
-        letter-spacing: 2px;
+        letter-spacing: 1.5px;
         font-size: 0.85rem !important;
     }
 
-    /* BIG GLISTENING STARS ENGINE */
+    /* Bulletproof Glistening Stars */
     .stApp::before {
         content: "";
         position: fixed;
         top: 0; left: 0; width: 100%; height: 100%;
         background-image: 
-            radial-gradient(4px 4px at 10% 10%, #ffffff, rgba(0,0,0,0)),
-            radial-gradient(6px 6px at 20% 50%, #37b36f, rgba(0,0,0,0)),
-            radial-gradient(4px 4px at 40% 30%, #ffffff, rgba(0,0,0,0)),
-            radial-gradient(8px 8px at 60% 80%, #ffffff, rgba(0,0,0,0)),
-            radial-gradient(5px 5px at 80% 20%, #37b36f, rgba(0,0,0,0)),
-            radial-gradient(4px 4px at 90% 70%, #ffffff, rgba(0,0,0,0)),
-            radial-gradient(7px 7px at 30% 90%, #ffffff, rgba(0,0,0,0)),
-            radial-gradient(5px 5px at 70% 40%, #ffffff, rgba(0,0,0,0));
+            radial-gradient(2px 2px at 50px 100px, #ffffff, rgba(0,0,0,0)),
+            radial-gradient(3px 3px at 150px 350px, #37b36f, rgba(0,0,0,0)),
+            radial-gradient(2px 2px at 250px 200px, #ffffff, rgba(0,0,0,0)),
+            radial-gradient(4px 4px at 400px 500px, #37b36f, rgba(0,0,0,0)),
+            radial-gradient(2px 2px at 550px 150px, #ffffff, rgba(0,0,0,0)),
+            radial-gradient(3px 3px at 700px 600px, #ffffff, rgba(0,0,0,0));
         background-repeat: repeat;
-        background-size: 1000px 1000px;
+        background-size: 800px 800px;
         opacity: 0.9;
-        animation: stars-move 140s linear infinite;
+        animation: stars-move 120s linear infinite;
         z-index: -1;
     }
 
@@ -65,19 +54,19 @@ st.markdown("""
     .rich-header {
         text-align: center;
         font-weight: 900;
-        letter-spacing: 12px;
+        letter-spacing: 10px;
         color: #FFFFFF;
         text-transform: uppercase;
         margin: 20px 0;
-        text-shadow: 0 0 25px rgba(55, 179, 111, 0.7);
+        text-shadow: 0 0 20px rgba(55, 179, 111, 0.6);
     }
 
     /* Glassmorphism Expander */
     div.stExpander {
         border: 1px solid rgba(55, 179, 111, 0.5) !important;
-        background: rgba(0, 0, 0, 0.8) !important;
+        background: rgba(255, 255, 255, 0.05) !important;
         backdrop-filter: blur(20px);
-        border-radius: 4px !important;
+        border-radius: 12px !important;
     }
 
     /* Premium Green Buttons */
@@ -97,11 +86,11 @@ st.markdown("""
 
 # 3. Logo & Rich Header
 st.image("https://i.ibb.co/LzsV9Z6j/f774cc00-9f2e-4130-9644-1bddb2d6ae50.jpg")
-st.markdown("<h1 class='rich-header'>Price Calculator</h1>", unsafe_allow_html=True)
+st.markdown("<h1 class='rich-header'>PRIME QUOTATION ENGINE</h1>", unsafe_allow_html=True)
 
-# 4. Smart Global Project Memory (Uses Dictionary for merging)
-if 'cart' not in st.session_state or isinstance(st.session_state.cart, list):
-    st.session_state.cart = {}
+# 4. Global Project Memory
+if 'cart' not in st.session_state:
+    st.session_state.cart = []
 
 # 5. Data Hub
 url = "https://docs.google.com/spreadsheets/d/1qvBKlYH7q4dXsu7tEh9OLnKSydfONNRzGa-xjUYLB0g/edit?usp=sharing"
@@ -109,7 +98,7 @@ url = "https://docs.google.com/spreadsheets/d/1qvBKlYH7q4dXsu7tEh9OLnKSydfONNRzG
 try:
     conn = st.connection("gsheets", type=GSheetsConnection)
     df = conn.read(spreadsheet=url, ttl="1m")
-    df.columns = [c.strip() for c in df.columns]
+    df.columns = [c.strip() for c in df.columns] # Syncing fix
 
     # Column Mapping
     cat_col, prod_col, pkr_col, sar_col, aed_col = "Product Category", "Product", "Total Price (PKR)", "Total Price (SAR)", "Total Price (AED)"
@@ -129,36 +118,27 @@ try:
         
         if st.button("ADD TO QUOTATION"):
             row = sub_df[sub_df[prod_col] == product].iloc[0]
-            
-            # SMART MERGE: If item exists in dictionary, add units instead of new row
-            if product in st.session_state.cart:
-                st.session_state.cart[product]['units'] += units
-                st.session_state.cart[product]['pkr'] += clean_num(row[pkr_col]) * units
-                st.session_state.cart[product]['sar'] += clean_num(row[sar_col]) * units
-                st.session_state.cart[product]['aed'] += clean_num(row[aed_col]) * units
-            else:
-                st.session_state.cart[product] = {
-                    "units": units,
-                    "pkr": clean_num(row[pkr_col]) * units,
-                    "sar": clean_num(row[sar_col]) * units,
-                    "aed": clean_num(row[aed_col]) * units
-                }
+            st.session_state.cart.append({
+                "name": product, "units": units,
+                "pkr": clean_num(row[pkr_col]) * units,
+                "sar": clean_num(row[sar_col]) * units,
+                "aed": clean_num(row[aed_col]) * units
+            })
             st.rerun()
 
     # 7. Summary & Total Valuation
     if st.session_state.cart:
         totals = {"pkr": 0, "sar": 0, "aed": 0}
-        st.markdown("<br><h3>CURRENT SCOPE</h3>", unsafe_allow_html=True)
+        st.markdown("<br><h3 style='letter-spacing:4px; font-weight:200;'>CURRENT SCOPE</h3>", unsafe_allow_html=True)
         
-        # Iterating through dictionary items
-        for name, data in list(st.session_state.cart.items()):
-            totals["pkr"] += data["pkr"]; totals["sar"] += data["sar"]; totals["aed"] += data["aed"]
+        for i, item in enumerate(st.session_state.cart):
+            totals["pkr"] += item["pkr"]; totals["sar"] += item["sar"]; totals["aed"] += item["aed"]
             col_1, col_2, col_3 = st.columns([3, 1.5, 0.5])
-            with col_1: st.write(f"**{name}** (x{data['units']})")
-            with col_2: st.write(f"PKR {data['pkr']:,.0f}")
+            with col_1: st.write(f"**{item['name']}** (x{item['units']})")
+            with col_2: st.write(f"PKR {item['pkr']:,.0f}")
             with col_3:
-                if st.button("🗑️", key=f"del_{name}"):
-                    del st.session_state.cart[name]; st.rerun()
+                if st.button("🗑️", key=f"del_{i}"):
+                    st.session_state.cart.pop(i); st.rerun()
 
         # Premium Total Display
         st.markdown(f"""
