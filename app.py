@@ -1,89 +1,178 @@
 import streamlit as st
 from streamlit_gsheets import GSheetsConnection
 import pandas as pd
+import random
 
-# 1. Page Config & Theme
+# 1. Page Configuration
 st.set_page_config(page_title="Bayut Studios | Estimate Builder", layout="centered")
 
+# 2. Premium Design Layer (Starfield & Custom Styles)
+# This section injects the design into the app
 st.markdown("""
     <style>
-    .stApp { background-color: #050505; color: white; }
-    h1, h2, h3 { color: #37b36f !important; text-align: center; }
-    .cart-box { border: 1px solid #333; padding: 15px; border-radius: 10px; background: #111; margin-bottom: 10px; }
-    .total-box { border: 2px solid #37b36f; padding: 20px; border-radius: 15px; text-align: center; background: rgba(55, 179, 111, 0.1); }
+    /* Main Background & Text */
+    .stApp {
+        background-color: #050505;
+        color: white;
+        font-family: 'Segoe UI', Roboto, sans-serif;
+    }
+
+    /* Input Section - Glassmorphism Effect */
+    div.stExpander {
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 12px;
+        background: rgba(255,255,255,0.03);
+        backdrop-filter: blur(8px);
+    }
+    .stSelectbox label, .stNumberInput label {
+        color: rgba(255,255,255,0.7) !important;
+        font-weight: bold;
+    }
+    div[data-baseweb="select"] { background-color: #111 !important; color: white !important; }
+
+    /* The "Sexy" Dark Green Buttons */
+    div.stButton > button {
+        background-color: #1a6b4a; /* Bayut Dark Green */
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 24px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        box-shadow: 0 4px 15px rgba(26, 107, 74, 0.4);
+    }
+    div.stButton > button:hover {
+        background-color: #37b36f; /* Bayut Light Green */
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(55, 179, 111, 0.6);
+    }
+
+    /* Cart/Estimate Table */
+    .stMarkdown h3 { color: #37b36f !important; }
+    .cart-row {
+        background: rgba(255,255,255,0.01);
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        border-bottom: 1px solid #111;
+    }
+
+    /* The Bin Icon */
+    div[key^="del_"] > button {
+        background: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        font-size: 1.2rem;
+    }
+
+    /* Final Total Card */
+    .total-card {
+        border: 1px solid #37b36f;
+        padding: 30px;
+        border-radius: 15px;
+        text-align: center;
+        background: rgba(55, 179, 111, 0.05);
+        box-shadow: 0 10px 30px rgba(55, 179, 111, 0.1);
+    }
     </style>
+
+    <div style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;" id="particles-js"></div>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 150, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#ffffff" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.5, "random": true, "anim": { "enable": true, "speed": 1, "opacity_min": 0.1, "sync": false } },
+                "size": { "value": 3, "random": true, "anim": { "enable": false, "speed": 40, "size_min": 0.1, "sync": false } },
+                "line_linked": { "enable": false },
+                "move": { "enable": true, "speed": 0.5, "direction": "none", "random": true, "straight": false, "out_mode": "out", "bounce": false }
+            },
+            "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": false }, "onclick": { "enable": false }, "resize": true } },
+            "retina_detect": true
+        });
+    </script>
     """, unsafe_allow_html=True)
 
-# 2. Header
-st.image("https://i.ibb.co/V99SV7v/bayut-logo.png") # Updated to your logo
-st.markdown("### PROJECT ESTIMATE BUILDER")
+# 3. Header & Logo
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    st.image("https://i.ibb.co/LzsV9Z6j/f774cc00-9f2e-4130-9644-1bddb2d6ae50.jpg")
+st.markdown("<h3 style='text-align: center; color: white; letter-spacing: 5px; opacity: 0.8;'>ESTIMATE BUILDER</h3>", unsafe_allow_html=True)
+st.markdown("---")
 
-# 3. Initialize Cart (Session State)
+# 4. Initialize Cart (Session State)
 if 'cart' not in st.session_state:
     st.session_state.cart = []
 
-# 4. Data Connection
+# 5. Data Connection
 url = "https://docs.google.com/spreadsheets/d/1qvBKlYH7q4dXsu7tEh9OLnKSydfONNRzGa-xjUYLB0g/edit?usp=sharing"
 try:
     conn = st.connection("gsheets", type=GSheetsConnection)
     df = conn.read(spreadsheet=url, ttl="1m")
 
-    # 5. Selection Area
-    with st.expander("➕ Add Service to Estimate", expanded=True):
-        cat_col = [c for c in df.columns if 'Category' in c][0]
-        prod_col = [c for c in df.columns if 'Product' in c and 'Category' not in c][0]
-        price_col = [c for c in df.columns if 'Price' in c and 'PKR' in c][0]
+    # Dynamic Column Detection
+    cat_col = [c for c in df.columns if 'Category' in c][0]
+    prod_col = [c for c in df.columns if 'Product' in c and 'Category' not in c][0]
+    price_col = [c for c in df.columns if 'Price' in c and 'PKR' in c][0]
 
+    # 6. "Add to Estimate" (Glassmorphism Section)
+    with st.expander("➕ Add Service to Estimate", expanded=not st.session_state.cart):
         col1, col2 = st.columns(2)
         with col1:
             category = st.selectbox("Category", df[cat_col].unique())
+            filtered_df = df[df[cat_col] == category]
         with col2:
-            product = st.selectbox("Service", df[df[cat_col] == category][prod_col].unique())
+            product = st.selectbox("Service", filtered_df[prod_col].unique())
         
-        units = st.number_input("Units/Quantity", min_value=1, value=1)
+        units = st.number_input("Units/Quantity", min_value=1, value=1, step=1)
         
+        # Sleek Green Button
         if st.button("Add to Cart", use_container_width=True):
-            # Get price logic
-            row = df[df[prod_col] == product].iloc[0]
-            price_val = float(str(row[price_col]).replace('PKR', '').replace(',', '').strip())
+            price_data = filtered_df[filtered_df[prod_col] == product].iloc[0]
+            price_val = float(str(price_data[price_col]).replace('PKR', '').replace(',', '').strip())
             
-            # Add item to session state
+            # Add to memory
             st.session_state.cart.append({
                 "service": product,
                 "units": units,
                 "price": price_val,
                 "total": price_val * units
             })
-            st.toast(f"Added {product} to estimate!")
+            st.rerun()
 
-    # 6. Display Cart
-    st.markdown("---")
-    st.markdown("### 🛒 Your Estimate")
-
-    if not st.session_state.cart:
-        st.info("Your cart is empty. Add services above to begin.")
-    else:
+    # 7. Display Estimate Table
+    if st.session_state.cart:
+        st.markdown("---")
+        st.markdown("### Your Selection")
         grand_total = 0
-        # Create a copy to allow deletion while iterating
+        
+        # Display each item with its own Bin button
         for i, item in enumerate(st.session_state.cart):
+            grand_total += item['total']
             with st.container():
                 c1, c2, c3 = st.columns([3, 1, 0.5])
                 with c1:
-                    st.markdown(f"**{item['service']}** \n{item['units']} unit(s) @ PKR {item['price']:,.0f}")
+                    st.markdown(f"**{item['service']}**")
+                    st.markdown(f"<p style='color: #888; font-size: 0.9rem; margin-top:0;'>{item['units']} unit(s) @ PKR {item['price']:,.0f}</p>", unsafe_allow_html=True)
                 with c2:
-                    st.markdown(f"**PKR {item['total']:,.0f}**")
+                    st.markdown(f"<p style='margin-top: 10px; font-weight: bold;'>PKR {item['total']:,.0f}</p>", unsafe_allow_html=True)
                 with c3:
-                    # The "Bin" icon logic
+                    # Clean Bin Button Logic
                     if st.button("🗑️", key=f"del_{i}"):
                         st.session_state.cart.pop(i)
                         st.rerun()
                 st.markdown("<hr style='margin: 5px 0; border-color: #222;'>", unsafe_allow_html=True)
-                grand_total += item['total']
 
-        # 7. Final Grand Total
+        # 8. Final Estimate Total Card
+        st.markdown("<br><br>", unsafe_allow_html=True)
         st.markdown(f"""
-            <div class="total-box">
-                <p style="color: #888; margin-bottom: 0;">ESTIMATED TOTAL</p>
+            <div class="total-card">
+                <p style="color: #888; text-transform: uppercase; letter-spacing: 2px;">Estimated Total</p>
                 <h1 style="margin: 0;">PKR {grand_total:,.0f}</h1>
             </div>
             """, unsafe_allow_html=True)
