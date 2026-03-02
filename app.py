@@ -4,84 +4,103 @@ import pandas as pd
 
 # 1. Page Configuration
 st.set_page_config(page_title="Bayut Studios | Estimate Builder", layout="centered")
-import streamlit as st
-from streamlit_gsheets import GSheetsConnection
-import pandas as pd
 
-# 1. Page Configuration
-st.set_page_config(page_title="Bayut Studios | Estimate Builder", layout="centered")
-
-# 2. Rich Midnight Starfield CSS
+# 2. Ultra-Rich Starfield & Luxury UI
 st.markdown("""
     <style>
-    /* Rich Deep Navy Background */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap');
+
+    /* Pure Black Background with Deep Space Depth */
     .stApp {
-        background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+        background: radial-gradient(circle at center, #0a0a0a 0%, #000000 100%);
         color: white;
-        overflow: hidden;
+        font-family: 'Inter', sans-serif;
     }
 
-    /* Star Layer 1: Tiny & Many */
-    .stars-small {
+    /* Multi-Layered CSS Stars */
+    .star-layer {
         position: fixed;
-        top: 0; left: 0; width: 2px; height: 2px;
-        background: transparent;
-        box-shadow: 454px 105px #FFF, 207px 1012px #FFF, 1200px 200px #FFF, 800px 900px #FFF, 300px 400px #FFF, 1500px 600px #FFF, 50px 800px #FFF, 950px 150px #FFF;
-        animation: animStar 50s linear infinite;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        pointer-events: none;
+        z-index: -1;
     }
 
-    /* Star Layer 2: Medium & Glistening */
-    .stars-medium {
-        position: fixed;
-        top: 0; left: 0; width: 4px; height: 4px;
+    /* Small distant stars */
+    .stars1 {
         background: transparent;
-        box-shadow: 100px 300px #FFF, 700px 400px #FFF, 1400px 700px #37b36f, 500px 100px #FFF, 1100px 900px #FFF;
-        animation: animStar 100s linear infinite, twinkle 3s ease-in-out infinite;
+        box-shadow: 100px 100px #fff, 400px 300px #fff, 800px 500px #fff, 1200px 100px #fff, 1500px 800px #fff, 200px 900px #fff, 600px 200px #fff, 1000px 700px #fff, 1400px 400px #fff, 300px 600px #fff;
+        width: 1px; height: 1px;
+        animation: moveStars 120s linear infinite;
+    }
+
+    /* Medium glistening stars */
+    .stars2 {
+        background: transparent;
+        box-shadow: 250px 150px #37b36f, 750px 350px #fff, 1150px 650px #37b36f, 150px 850px #fff, 950px 450px #fff, 1350px 250px #37b36f;
+        width: 3px; height: 3px;
         border-radius: 50%;
+        animation: moveStars 80s linear infinite, twinkle 4s ease-in-out infinite;
     }
 
-    /* Animations */
-    @keyframes animStar {
-        from { transform: translateY(0px); }
-        to { transform: translateY(-2000px); }
+    @keyframes moveStars {
+        from { transform: translateY(0); }
+        to { transform: translateY(-1000px); }
     }
+
     @keyframes twinkle {
-        0%, 100% { opacity: 0.4; transform: scale(1); }
-        50% { opacity: 1; transform: scale(1.4); filter: blur(1px); }
+        0%, 100% { opacity: 0.3; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.5); filter: blur(1px); }
     }
 
-    /* Premium UI Styling */
-    div.stExpander {
-        border: 1px solid rgba(55, 179, 111, 0.3);
-        background: rgba(0, 0, 0, 0.4);
-        backdrop-filter: blur(20px);
-        border-radius: 15px;
+    /* Better Text & Headings */
+    h3 {
+        letter-spacing: 6px !important;
+        font-weight: 300 !important;
+        text-transform: uppercase;
+        color: #ffffff !important;
     }
+
+    /* Luxury Glassmorphism Container */
+    div.stExpander {
+        border: 1px solid rgba(55, 179, 111, 0.2) !important;
+        background: rgba(255, 255, 255, 0.03) !important;
+        backdrop-filter: blur(25px) !important;
+        border-radius: 20px !important;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+
+    /* Dark Green Brand Buttons */
     div.stButton > button {
         background-color: #1a6b4a !important;
-        border: 1px solid #37b36f !important;
-        box-shadow: 0 0 15px rgba(55, 179, 111, 0.4);
-        border-radius: 10px;
-        padding: 15px;
+        border: 1px solid rgba(55, 179, 111, 0.5) !important;
+        color: white !important;
+        border-radius: 12px !important;
+        padding: 20px !important;
+        font-weight: 700 !important;
+        letter-spacing: 2px;
+        transition: 0.4s;
     }
-    .total-card {
-        border: 2px solid #37b36f;
-        padding: 30px;
-        border-radius: 15px;
-        background: rgba(0, 0, 0, 0.6);
-        box-shadow: 0 10px 40px rgba(55, 179, 111, 0.2);
+
+    div.stButton > button:hover {
+        background-color: #37b36f !important;
+        box-shadow: 0 0 25px rgba(55, 179, 111, 0.4);
     }
     </style>
     
-    <div class="stars-small"></div>
-    <div class="stars-medium"></div>
+    <div class="star-layer stars1"></div>
+    <div class="star-layer stars2"></div>
     """, unsafe_allow_html=True)
 
-# 3. Logo & Brand
+# 3. Logo & Title Section
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
-    st.image("https://i.ibb.co/LzsV9Z6j/f774cc00-9f2e-4130-9644-1bddb2d6ae50.jpg")
-st.markdown("<h3 style='text-align: center; color: white; letter-spacing: 5px; opacity: 0.9;'>ESTIMATE BUILDER</h3>", unsafe_allow_html=True)
+    # Ensuring logo is sharp and centered
+    st.image("https://i.ibb.co/LzsV9Z6j/f774cc00-9f2e-4130-9644-1bddb2d6ae50.jpg", use_container_width=True)
+st.markdown("<h3>ESTIMATE BUILDER</h3>", unsafe_allow_html=True)
+st.markdown("<br>", unsafe_allow_html=True)
+
+# --- YOUR EXISTING LOGIC CONTINUES HERE ---
 
 # --- REST OF YOUR LOGIC (Session State, Connection, Cart) REMAINS THE SAME ---
 # 4. Initialize Session State
