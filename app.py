@@ -2,173 +2,132 @@ import streamlit as st
 from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 
-# 1. Page Configuration
-st.set_page_config(page_title="Bayut Studios | Estimate Builder", layout="centered")
+# 1. Page Setup
+st.set_page_config(page_title="Bayut Studios | Global Estimate Builder", layout="centered")
 
-# 2. Ultra-Rich Starfield & Luxury UI
+# 2. Luxury Starfield & Glass UI
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;700&display=swap');
 
-    /* Pure Black Background with Deep Space Depth */
     .stApp {
-        background: radial-gradient(circle at center, #0a0a0a 0%, #000000 100%);
-        color: white;
-        font-family: 'Inter', sans-serif;
+        background-color: #000000;
+        color: #E0E0E0;
+        font-family: 'Montserrat', sans-serif;
     }
 
-    /* Multi-Layered CSS Stars */
-    .star-layer {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        pointer-events: none;
-        z-index: -1;
-    }
-
-    /* Small distant stars */
-    .stars1 {
-        background: transparent;
-        box-shadow: 100px 100px #fff, 400px 300px #fff, 800px 500px #fff, 1200px 100px #fff, 1500px 800px #fff, 200px 900px #fff, 600px 200px #fff, 1000px 700px #fff, 1400px 400px #fff, 300px 600px #fff;
-        width: 1px; height: 1px;
-        animation: moveStars 120s linear infinite;
-    }
-
-    /* Medium glistening stars */
-    .stars2 {
-        background: transparent;
-        box-shadow: 250px 150px #37b36f, 750px 350px #fff, 1150px 650px #37b36f, 150px 850px #fff, 950px 450px #fff, 1350px 250px #37b36f;
-        width: 3px; height: 3px;
-        border-radius: 50%;
-        animation: moveStars 80s linear infinite, twinkle 4s ease-in-out infinite;
-    }
-
-    @keyframes moveStars {
-        from { transform: translateY(0); }
-        to { transform: translateY(-1000px); }
+    /* Ultra-Dense Glistening Starfield */
+    .star-bg {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        z-index: -1; background: transparent;
+        box-shadow: 10vw 10vh #fff, 25vw 40vh #fff, 45vw 15vh #37b36f, 70vw 80vh #fff, 85vw 30vh #fff, 15vw 90vh #37b36f, 60vw 50vh #fff, 95vw 10vh #fff, 35vw 75vh #fff, 55vw 20vh #37b36f, 5vw 55vh #fff, 80vw 65vh #fff;
+        animation: twinkle 4s infinite ease-in-out;
     }
 
     @keyframes twinkle {
         0%, 100% { opacity: 0.3; transform: scale(1); }
-        50% { opacity: 1; transform: scale(1.5); filter: blur(1px); }
+        50% { opacity: 0.9; transform: scale(1.1); filter: blur(1px); }
     }
 
-    /* Better Text & Headings */
-    h3 {
-        letter-spacing: 6px !important;
-        font-weight: 300 !important;
+    /* Premium Headings */
+    .main-heading {
+        letter-spacing: 12px;
+        font-weight: 200;
+        color: #F8F8F8;
+        text-align: center;
         text-transform: uppercase;
-        color: #ffffff !important;
+        margin-top: 20px;
     }
 
-    /* Luxury Glassmorphism Container */
+    /* Glassmorphism Cards */
     div.stExpander {
-        border: 1px solid rgba(55, 179, 111, 0.2) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
         background: rgba(255, 255, 255, 0.03) !important;
-        backdrop-filter: blur(25px) !important;
+        backdrop-filter: blur(20px) !important;
         border-radius: 20px !important;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
     }
 
-    /* Dark Green Brand Buttons */
+    /* Bayut Green Buttons */
     div.stButton > button {
-        background-color: #1a6b4a !important;
-        border: 1px solid rgba(55, 179, 111, 0.5) !important;
+        background: linear-gradient(135deg, #1a6b4a 0%, #37b36f 100%) !important;
         color: white !important;
-        border-radius: 12px !important;
-        padding: 20px !important;
-        font-weight: 700 !important;
+        border: none !important;
+        border-radius: 50px !important;
+        padding: 15px 40px !important;
+        font-weight: 600 !important;
         letter-spacing: 2px;
-        transition: 0.4s;
-    }
-
-    div.stButton > button:hover {
-        background-color: #37b36f !important;
-        box-shadow: 0 0 25px rgba(55, 179, 111, 0.4);
+        box-shadow: 0 10px 20px rgba(55, 179, 111, 0.2);
     }
     </style>
-    
-    <div class="star-layer stars1"></div>
-    <div class="star-layer stars2"></div>
+    <div class="star-bg"></div>
     """, unsafe_allow_html=True)
 
-# 3. Logo & Title Section
-col1, col2, col3 = st.columns([1, 2, 1])
-with col2:
-    # Ensuring logo is sharp and centered
-    st.image("https://i.ibb.co/LzsV9Z6j/f774cc00-9f2e-4130-9644-1bddb2d6ae50.jpg", use_container_width=True)
-st.markdown("<h3>ESTIMATE BUILDER</h3>", unsafe_allow_html=True)
-st.markdown("<br>", unsafe_allow_html=True)
+# 3. Branding
+st.image("https://i.ibb.co/LzsV9Z6j/f774cc00-9f2e-4130-9644-1bddb2d6ae50.jpg")
+st.markdown("<h1 class='main-heading'>Estimate Builder</h1>", unsafe_allow_html=True)
 
-# --- YOUR EXISTING LOGIC CONTINUES HERE ---
+# 4. Currency Constants (Update these as needed)
+SAR_RATE = 0.013  # 1 PKR to SAR
+AED_RATE = 0.013  # 1 PKR to AED
 
-# --- REST OF YOUR LOGIC (Session State, Connection, Cart) REMAINS THE SAME ---
-# 4. Initialize Session State
+# 5. Data Connection
 if 'cart' not in st.session_state:
     st.session_state.cart = []
 
-# 5. Data Connection
 url = "https://docs.google.com/spreadsheets/d/1qvBKlYH7q4dXsu7tEh9OLnKSydfONNRzGa-xjUYLB0g/edit?usp=sharing"
 try:
     conn = st.connection("gsheets", type=GSheetsConnection)
     df = conn.read(spreadsheet=url, ttl="1m")
 
-    cat_col = [c for c in df.columns if 'Category' in c][0]
-    prod_col = [c for c in df.columns if 'Product' in c and 'Category' not in c][0]
-    price_col = [c for c in df.columns if 'Price' in c and 'PKR' in c][0]
-
-    # 6. Selection Interface
-    with st.expander("➕ Add Service to Estimate", expanded=not st.session_state.cart):
-        col1, col2 = st.columns(2)
-        with col1:
-            category = st.selectbox("Category", df[cat_col].unique())
-            filtered_df = df[df[cat_col] == category]
-        with col2:
-            product = st.selectbox("Service", filtered_df[prod_col].unique())
+    # Selection Logic
+    with st.expander("➕ SELECT SERVICES"):
+        cat = st.selectbox("Category", df['Product Category'].unique())
+        prod = st.selectbox("Product", df[df['Product Category'] == cat]['Product'].unique())
+        qty = st.number_input("Units", min_value=1, value=1)
         
-        units = st.number_input("Units/Quantity", min_value=1, value=1, step=1)
-        
-        if st.button("Add to Cart"):
-            price_data = filtered_df[filtered_df[prod_col] == product].iloc[0]
-            price_val = float(str(price_data[price_col]).replace('PKR', '').replace(',', '').strip())
+        if st.button("ADD TO PROJECT"):
+            row = df[df['Product'] == prod].iloc[0]
+            # Cleaning the price string to float
+            price_pkr = float(str(row['Total Price (PKR)']).replace('PKR', '').replace(',', '').strip())
             
             st.session_state.cart.append({
-                "service": product,
-                "units": units,
-                "price": price_val,
-                "total": price_val * units
+                "item": prod,
+                "qty": qty,
+                "pkr": price_pkr * qty
             })
             st.rerun()
 
-    # 7. Cart Display
+    # 6. The Cart Display
     if st.session_state.cart:
         st.markdown("---")
-        st.markdown("### Your Selection")
-        grand_total = 0
-        
+        total_pkr = 0
         for i, item in enumerate(st.session_state.cart):
-            grand_total += item['total']
-            with st.container():
-                c1, c2, c3 = st.columns([3, 1, 0.5])
-                with c1:
-                    st.markdown(f"**{item['service']}**")
-                    st.markdown(f"<p style='color: #bbb; font-size: 0.9rem; margin-top:0;'>{item['units']} unit(s) @ PKR {item['price']:,.0f}</p>", unsafe_allow_html=True)
-                with c2:
-                    st.markdown(f"<p style='margin-top: 10px; font-weight: bold;'>PKR {item['total']:,.0f}</p>", unsafe_allow_html=True)
-                with c3:
-                    if st.button("🗑️", key=f"del_{i}"):
-                        st.session_state.cart.pop(i)
-                        st.rerun()
-                st.markdown("<hr style='margin: 5px 0; border-color: #333;'>", unsafe_allow_html=True)
+            total_pkr += item['pkr']
+            c1, c2, c3 = st.columns([3, 1, 0.5])
+            with c1:
+                st.markdown(f"<span style='color:#37b36f;'>●</span> {item['item']} (x{item['qty']})", unsafe_allow_html=True)
+            with c2:
+                st.markdown(f"PKR {item['pkr']:,.0f}")
+            with c3:
+                if st.button("🗑️", key=f"del_{i}"):
+                    st.session_state.cart.pop(i)
+                    st.rerun()
 
-        # 8. Grand Total
+        # 7. Final Global Totals
+        total_sar = total_pkr * SAR_RATE
+        total_aed = total_pkr * AED_RATE
+
         st.markdown("<br>", unsafe_allow_html=True)
         st.markdown(f"""
-            <div class="total-card">
-                <p style="color: #bbb; text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem;">Project Estimated Total</p>
-                <h1 style="margin: 0; color: #37b36f;">PKR {grand_total:,.0f}</h1>
+            <div style="background: rgba(255,255,255,0.05); padding: 40px; border-radius: 20px; border: 1px solid #37b36f; text-align: center;">
+                <p style="letter-spacing: 3px; color: #888;">TOTAL ESTIMATE</p>
+                <h1 style="color: white; margin: 10px 0;">PKR {total_pkr:,.0f}</h1>
+                <div style="display: flex; justify-content: center; gap: 40px; border-top: 1px solid #333; pt-20px; margin-top: 20px;">
+                    <div><p style="color:#888; font-size: 0.8rem;">SAR</p><h3 style="color:#37b36f;">{total_sar:,.2f}</h3></div>
+                    <div><p style="color:#888; font-size: 0.8rem;">AED (DUBAI)</p><h3 style="color:#37b36f;">{total_aed:,.2f}</h3></div>
+                </div>
             </div>
             """, unsafe_allow_html=True)
 
 except Exception as e:
-    st.error(f"Error loading data: {e}")
+    st.error(f"Waiting for Sheet Connection... ({e})")
