@@ -12,7 +12,7 @@ def consolidate_cart(cart_items):
     for item in cart_items:
         if isinstance(item, dict) and "name" in item:
             key = item["name"]
-            if key in consolidated: # ADDED MISSING COLON HERE
+            if key in consolidated:
                 consolidated[key]["units"] += item["units"]
                 consolidated[key]["pkr"] += item["pkr"]
                 consolidated[key]["sar"] += item["sar"]
@@ -31,7 +31,7 @@ def clean_num(val):
         return 0.0
     except: return 0.0
 
-# --- 2. THE DESIGN: RICH NIGHT & MASSIVE STARS ---
+# --- 2. THE DESIGN: FIXED BUTTONS & STAR ENGINE ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;700;900&family=Inter:wght@900&display=swap');
@@ -40,47 +40,73 @@ st.markdown("""
     
     label, .stMarkdown p, .stExpander p { color: #FFFFFF !important; font-weight: 700 !important; text-transform: uppercase; letter-spacing: 2px; }
 
-    /* LAYER 1: MASSIVE STATIONARY STARS */
+    /* STAR ENGINE */
     .stApp::before {
         content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         background-image: 
             radial-gradient(6px 6px at 10% 15%, #ffffff, rgba(0,0,0,0)),
-            radial-gradient(10px 10px at 80% 80%, #37b36f, rgba(0,0,0,0)),
-            radial-gradient(12px 12px at 20% 90%, #ffffff, rgba(0,0,0,0)),
-            radial-gradient(8px 8px at 85% 15%, #37b36f, rgba(0,0,0,0));
+            radial-gradient(12px 12px at 80% 80%, #37b36f, rgba(0,0,0,0)),
+            radial-gradient(14px 14px at 20% 90%, #ffffff, rgba(0,0,0,0)),
+            radial-gradient(10px 10px at 85% 15%, #37b36f, rgba(0,0,0,0));
         background-repeat: repeat; background-size: 1000px 1000px; opacity: 1; z-index: -1;
     }
-
-    /* LAYER 2: LARGE MOVING STARS */
     .stApp::after {
         content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background-image: 
-            radial-gradient(5px 5px at 50% 50%, #ffffff, rgba(0,0,0,0)),
-            radial-gradient(11px 11px at 25% 25%, #37b36f, rgba(0,0,0,0));
+        background-image: radial-gradient(11px 11px at 25% 25%, #37b36f, rgba(0,0,0,0));
         background-repeat: repeat; background-size: 800px 800px; opacity: 0.8; 
         animation: stars-move 120s linear infinite; z-index: -1;
     }
-
     @keyframes stars-move { from { background-position: 0 0; } to { background-position: 0 -10000px; } }
 
-    /* FIX: ALL BUTTONS White-out Prevention */
-    button, button:hover, button:active, button:focus {
+    /* --- CRITICAL BUTTON FIX: PREVENT WHITE-OUT --- */
+    /* Target all buttons to stay white text */
+    button, p { color: white !important; }
+
+    /* Main Green Buttons (Add to Quotation / Clear All) */
+    div.stButton > button:not([key^="del_"]) {
+        background: linear-gradient(135deg, #1a6b4a 0%, #37b36f 100%) !important;
+        border: none !important;
         color: white !important;
-        text-decoration: none !important;
+        font-weight: 900 !important;
+        letter-spacing: 3px;
+        padding: 1rem !important;
+        border-radius: 8px !important;
     }
 
-    /* Bin Icon Style */
+    /* Force button to stay green on hover/focus/active */
+    div.stButton > button:not([key^="del_"]):hover, 
+    div.stButton > button:not([key^="del_"]):focus, 
+    div.stButton > button:not([key^="del_"]):active {
+        background: #37b36f !important;
+        color: white !important;
+        border: none !important;
+        box-shadow: 0 0 20px rgba(55, 179, 111, 0.6) !important;
+    }
+
+    /* Bin Icon Fix */
     div[key^="del_"] button {
         background-color: transparent !important;
         border: none !important;
-        font-size: 1.8rem !important;
+        font-size: 2rem !important;
         color: #ff4b4b !important;
+    }
+    div[key^="del_"] button:hover {
+        color: #ff3333 !important;
+        background-color: transparent !important;
+        transform: scale(1.2);
+    }
+
+    /* Expander Styling */
+    div.stExpander { 
+        border: 2px solid rgba(55, 179, 111, 0.7) !important; 
+        background: rgba(0, 0, 0, 0.85) !important; 
+        backdrop-filter: blur(20px); 
+        border-radius: 12px !important; 
     }
 
     .item-card { background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 10px; margin-bottom: 10px; border-left: 5px solid #37b36f; }
     .bold-currency { font-family: 'Inter', sans-serif; font-weight: 900; color: #37b36f; }
     .rich-header { text-align: center; font-weight: 900; letter-spacing: 12px; text-transform: uppercase; margin: 20px 0; text-shadow: 0 0 40px rgba(55, 179, 111, 0.8); font-size: 2.8rem; }
-    div.stExpander { border: 2px solid rgba(55, 179, 111, 0.7) !important; background: rgba(0, 0, 0, 0.85) !important; backdrop-filter: blur(20px); border-radius: 12px !important; }
     </style>
     """, unsafe_allow_html=True)
 
