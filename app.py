@@ -5,7 +5,7 @@ import pandas as pd
 # 1. Page Configuration
 st.set_page_config(page_title="Bayut Studios | Prime Quotation Engine", layout="centered")
 
-# 2. Premium Design: Ultra-Visible Stars & Bold White Text
+# 2. Premium Design: Enhanced Stars & Bold White Text
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;700;900&display=swap');
@@ -26,22 +26,50 @@ st.markdown("""
         font-size: 0.85rem !important;
     }
 
-    /* Bulletproof Glistening Stars */
+    /* Enhanced Glistening Stars - Larger & More Abundant */
     .stApp::before {
         content: "";
         position: fixed;
         top: 0; left: 0; width: 100%; height: 100%;
         background-image: 
-            radial-gradient(2px 2px at 50px 100px, #ffffff, rgba(0,0,0,0)),
-            radial-gradient(3px 3px at 150px 350px, #37b36f, rgba(0,0,0,0)),
-            radial-gradient(2px 2px at 250px 200px, #ffffff, rgba(0,0,0,0)),
-            radial-gradient(4px 4px at 400px 500px, #37b36f, rgba(0,0,0,0)),
-            radial-gradient(2px 2px at 550px 150px, #ffffff, rgba(0,0,0,0)),
-            radial-gradient(3px 3px at 700px 600px, #ffffff, rgba(0,0,0,0));
+            radial-gradient(4px 4px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+            radial-gradient(6px 6px at 80px 120px, #37b36f, rgba(0,0,0,0)),
+            radial-gradient(5px 5px at 150px 200px, #ffffff, rgba(0,0,0,0)),
+            radial-gradient(7px 7px at 250px 80px, #37b36f, rgba(0,0,0,0)),
+            radial-gradient(4px 4px at 350px 400px, #ffffff, rgba(0,0,0,0)),
+            radial-gradient(8px 8px at 450px 150px, #ffffff, rgba(0,0,0,0)),
+            radial-gradient(5px 5px at 550px 500px, #37b36f, rgba(0,0,0,0)),
+            radial-gradient(6px 6px at 650px 300px, #ffffff, rgba(0,0,0,0)),
+            radial-gradient(7px 7px at 750px 450px, #37b36f, rgba(0,0,0,0)),
+            radial-gradient(5px 5px at 850px 200px, #ffffff, rgba(0,0,0,0)),
+            radial-gradient(9px 9px at 950px 550px, #ffffff, rgba(0,0,0,0)),
+            radial-gradient(4px 4px at 1050px 350px, #37b36f, rgba(0,0,0,0)),
+            radial-gradient(6px 6px at 150px 650px, #ffffff, rgba(0,0,0,0)),
+            radial-gradient(8px 8px at 450px 750px, #37b36f, rgba(0,0,0,0)),
+            radial-gradient(5px 5px at 750px 850px, #ffffff, rgba(0,0,0,0)),
+            radial-gradient(7px 7px at 950px 950px, #37b36f, rgba(0,0,0,0));
         background-repeat: repeat;
-        background-size: 800px 800px;
-        opacity: 0.9;
-        animation: stars-move 120s linear infinite;
+        background-size: 1200px 1200px;
+        opacity: 1;
+        animation: stars-move 180s linear infinite;
+        z-index: -1;
+    }
+
+    /* Additional twinkling stars layer */
+    .stApp::after {
+        content: "";
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background-image: 
+            radial-gradient(3px 3px at 120px 520px, #ffffff, rgba(0,0,0,0)),
+            radial-gradient(5px 5px at 320px 220px, #37b36f, rgba(0,0,0,0)),
+            radial-gradient(4px 4px at 520px 720px, #ffffff, rgba(0,0,0,0)),
+            radial-gradient(6px 6px at 720px 420px, #37b36f, rgba(0,0,0,0)),
+            radial-gradient(4px 4px at 920px 620px, #ffffff, rgba(0,0,0,0));
+        background-repeat: repeat;
+        background-size: 1000px 1000px;
+        opacity: 0.7;
+        animation: stars-move 120s linear infinite reverse;
         z-index: -1;
     }
 
@@ -58,15 +86,36 @@ st.markdown("""
         color: #FFFFFF;
         text-transform: uppercase;
         margin: 20px 0;
-        text-shadow: 0 0 20px rgba(55, 179, 111, 0.6);
+        text-shadow: 0 0 30px rgba(55, 179, 111, 0.8);
+        font-size: 2.5rem;
     }
 
-    /* Glassmorphism Expander */
+    /* Fixed Glassmorphism Expander - Always Green Tint */
     div.stExpander {
-        border: 1px solid rgba(55, 179, 111, 0.5) !important;
-        background: rgba(255, 255, 255, 0.05) !important;
-        backdrop-filter: blur(20px);
-        border-radius: 12px !important;
+        border: 2px solid rgba(55, 179, 111, 0.7) !important;
+        background: rgba(0, 0, 0, 0.7) !important;
+        backdrop-filter: blur(15px);
+        border-radius: 16px !important;
+        transition: all 0.3s ease;
+    }
+    
+    /* Keep the green tint even when not hovered */
+    div.stExpander > div:first-child {
+        background-color: rgba(55, 179, 111, 0.15) !important;
+        border-radius: 16px 16px 0 0 !important;
+    }
+    
+    /* Expander header text */
+    div.stExpander summary p {
+        color: #37b36f !important;
+        font-size: 1rem !important;
+        font-weight: 900 !important;
+    }
+    
+    /* Content area background */
+    div.stExpander > div[data-testid="stExpander"] > div:nth-child(2) {
+        background-color: rgba(0, 0, 0, 0.8) !important;
+        border-radius: 0 0 16px 16px !important;
     }
 
     /* Premium Green Buttons */
@@ -79,7 +128,22 @@ st.markdown("""
         letter-spacing: 3px;
         padding: 1rem 2rem !important;
         width: 100%;
-        box-shadow: 0 10px 30px rgba(55, 179, 111, 0.3);
+        box-shadow: 0 10px 30px rgba(55, 179, 111, 0.4);
+        transition: all 0.3s ease;
+    }
+    
+    div.stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 40px rgba(55, 179, 111, 0.6);
+    }
+    
+    /* Cart items styling */
+    .cart-item {
+        background: rgba(55, 179, 111, 0.1);
+        padding: 10px;
+        border-radius: 8px;
+        margin: 5px 0;
+        border-left: 4px solid #37b36f;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -91,6 +155,20 @@ st.markdown("<h1 class='rich-header'>PRIME QUOTATION ENGINE</h1>", unsafe_allow_
 # 4. Global Project Memory
 if 'cart' not in st.session_state:
     st.session_state.cart = []
+
+# Function to consolidate cart items
+def consolidate_cart(cart_items):
+    consolidated = {}
+    for item in cart_items:
+        key = item["name"]  # Use product name as key
+        if key in consolidated:
+            consolidated[key]["units"] += item["units"]
+            consolidated[key]["pkr"] += item["pkr"]
+            consolidated[key]["sar"] += item["sar"]
+            consolidated[key]["aed"] += item["aed"]
+        else:
+            consolidated[key] = item.copy()
+    return list(consolidated.values())
 
 # 5. Data Hub
 url = "https://docs.google.com/spreadsheets/d/1qvBKlYH7q4dXsu7tEh9OLnKSydfONNRzGa-xjUYLB0g/edit?usp=sharing"
@@ -109,48 +187,88 @@ try:
         return float(val)
 
     # 6. Service Selector
-    with st.expander("CONFIGURE YOUR PROJECT SCOPE", expanded=True):
+    with st.expander("🚀 CONFIGURE YOUR PROJECT SCOPE", expanded=True):
         category = st.selectbox("CATEGORY", df[cat_col].unique())
         sub_df = df[df[cat_col] == category]
         
         product = st.selectbox("PRODUCT SERVICE", sub_df[prod_col].unique())
         units = st.number_input("UNITS REQUIRED", min_value=1, value=1)
         
-        if st.button("ADD TO QUOTATION"):
+        if st.button("➕ ADD TO QUOTATION"):
             row = sub_df[sub_df[prod_col] == product].iloc[0]
             st.session_state.cart.append({
-                "name": product, "units": units,
+                "name": product, 
+                "units": units,
                 "pkr": clean_num(row[pkr_col]) * units,
                 "sar": clean_num(row[sar_col]) * units,
                 "aed": clean_num(row[aed_col]) * units
             })
+            # Consolidate cart immediately after adding
+            st.session_state.cart = consolidate_cart(st.session_state.cart)
             st.rerun()
 
     # 7. Summary & Total Valuation
     if st.session_state.cart:
+        # Consolidate cart before displaying (ensures no duplicates)
+        st.session_state.cart = consolidate_cart(st.session_state.cart)
+        
         totals = {"pkr": 0, "sar": 0, "aed": 0}
-        st.markdown("<br><h3 style='letter-spacing:4px; font-weight:200;'>CURRENT SCOPE</h3>", unsafe_allow_html=True)
+        st.markdown("<br><h3 style='letter-spacing:4px; font-weight:200; color: white;'>📋 CURRENT SCOPE</h3>", unsafe_allow_html=True)
         
         for i, item in enumerate(st.session_state.cart):
-            totals["pkr"] += item["pkr"]; totals["sar"] += item["sar"]; totals["aed"] += item["aed"]
-            col_1, col_2, col_3 = st.columns([3, 1.5, 0.5])
-            with col_1: st.write(f"**{item['name']}** (x{item['units']})")
-            with col_2: st.write(f"PKR {item['pkr']:,.0f}")
-            with col_3:
-                if st.button("🗑️", key=f"del_{i}"):
-                    st.session_state.cart.pop(i); st.rerun()
+            totals["pkr"] += item["pkr"]
+            totals["sar"] += item["sar"]
+            totals["aed"] += item["aed"]
+            
+            # Enhanced cart item display
+            with st.container():
+                col_1, col_2, col_3, col_4 = st.columns([3, 1, 1, 0.5])
+                with col_1:
+                    st.markdown(f"<div class='cart-item'><b>{item['name']}</b></div>", unsafe_allow_html=True)
+                with col_2:
+                    st.markdown(f"<div style='padding:10px;'>x{item['units']}</div>", unsafe_allow_html=True)
+                with col_3:
+                    st.markdown(f"<div style='padding:10px; color: #37b36f;'>PKR {item['pkr']:,.0f}</div>", unsafe_allow_html=True)
+                with col_4:
+                    if st.button("🗑️", key=f"del_{i}"):
+                        st.session_state.cart.pop(i)
+                        st.rerun()
 
-        # Premium Total Display
+        # Premium Total Display with enhanced styling
         st.markdown(f"""
-            <div style="border: 2px solid #37b36f; padding: 40px; border-radius: 4px; background: rgba(55, 179, 111, 0.1); text-align: center; margin-top: 40px;">
-                <p style="letter-spacing: 5px; color: #AAA; font-size: 0.7rem;">TOTAL VALUATION</p>
-                <h1 style="color: white; font-size: 4rem; font-weight: 900; margin: 10px 0;">PKR {totals['pkr']:,.0f}</h1>
-                <div style="display: flex; justify-content: center; gap: 60px; border-top: 1px solid #333; padding-top: 25px; margin-top: 20px;">
-                    <div><p style="color: #37b36f; font-size: 0.8rem; font-weight:700;">SAR</p><h2 style="color:white; font-weight:200;">{totals['sar']:,.2f}</h2></div>
-                    <div><p style="color: #37b36f; font-size: 0.8rem; font-weight:700;">AED</p><h2 style="color:white; font-weight:200;">{totals['aed']:,.2f}</h2></div>
+            <div style="border: 3px solid #37b36f; padding: 50px; border-radius: 20px; 
+                       background: linear-gradient(135deg, rgba(55, 179, 111, 0.15), rgba(0, 0, 0, 0.8));
+                       text-align: center; margin-top: 40px; box-shadow: 0 20px 50px rgba(55, 179, 111, 0.3);">
+                <p style="letter-spacing: 8px; color: #37b36f; font-size: 0.9rem; font-weight: 700; margin-bottom: 20px;">
+                    ✦ TOTAL VALUATION ✦
+                </p>
+                <h1 style="color: white; font-size: 5rem; font-weight: 900; margin: 20px 0; 
+                          text-shadow: 0 0 40px rgba(55, 179, 111, 0.5);">
+                    PKR {totals['pkr']:,.0f}
+                </h1>
+                <div style="display: flex; justify-content: center; gap: 80px; border-top: 2px solid #37b36f; 
+                           padding-top: 30px; margin-top: 30px;">
+                    <div>
+                        <p style="color: #37b36f; font-size: 1rem; font-weight:900; letter-spacing: 3px;">SAR</p>
+                        <h2 style="color:white; font-weight:300; font-size: 2.5rem;">{totals['sar']:,.2f}</h2>
+                    </div>
+                    <div>
+                        <p style="color: #37b36f; font-size: 1rem; font-weight:900; letter-spacing: 3px;">AED</p>
+                        <h2 style="color:white; font-weight:300; font-size: 2.5rem;">{totals['aed']:,.2f}</h2>
+                    </div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
+        
+        # Add a clear all button
+        if st.button("🗑️ CLEAR ALL"):
+            st.session_state.cart = []
+            st.rerun()
 
 except Exception as e:
-    st.error(f"ENGINE OFFLINE: {e}")
+    st.error(f"🚫 ENGINE OFFLINE: {e}")
+    st.markdown("""
+        <div style="text-align: center; color: #37b36f; padding: 50px;">
+            <p>Please check your connection and try again.</p>
+        </div>
+    """, unsafe_allow_html=True)
