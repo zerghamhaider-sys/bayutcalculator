@@ -4,83 +4,74 @@ import pandas as pd
 
 # 1. Page Configuration
 st.set_page_config(page_title="Bayut Studios | Estimate Builder", layout="centered")
-# 2. Premium Design Layer (High Visibility Starfield & Custom Styles)
+# 2. Premium Design Layer (Pure CSS Glistening Stars)
 st.markdown("""
     <style>
-    /* Main Background & Text */
+    /* 1. Deep Space Background */
     .stApp {
-        background-color: #010101; /* Deeper black for maximum contrast */
+        background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
         color: white;
-        font-family: 'Segoe UI', Roboto, sans-serif;
+        overflow: hidden;
     }
 
-    /* Input Section - Glassmorphism Effect */
+    /* 2. Generating the Stars using Box-Shadows */
+    /* Small Stars */
+    #stars {
+      width: 1px;
+      height: 1px;
+      background: transparent;
+      box-shadow: 1045px 105px #FFF , 207px 1012px #FFF , 500px 500px #FFF, 1200px 200px #FFF, 300px 800px #FFF, 1500px 600px #FFF, 100px 300px #FFF, 800px 100px #FFF, 400px 900px #FFF, 700px 400px #FFF;
+      animation: animStar 50s linear infinite;
+    }
+    #stars:after {
+      content: " ";
+      position: absolute;
+      top: 2000px;
+      width: 1px;
+      height: 1px;
+      background: transparent;
+      box-shadow: 1045px 105px #FFF , 207px 1012px #FFF , 500px 500px #FFF, 1200px 200px #FFF, 300px 800px #FFF, 1500px 600px #FFF;
+    }
+
+    /* Big Glistening Stars */
+    #stars2 {
+      width: 3px;
+      height: 3px;
+      background: transparent;
+      box-shadow: 200px 400px #FFF, 600px 100px #FFF, 1000px 800px #37b36f, 1400px 300px #FFF, 400px 700px #FFF;
+      animation: animStar 100s linear infinite, twinkle 3s ease-in-out infinite;
+      border-radius: 50%;
+    }
+
+    /* 3. Animations */
+    @keyframes animStar {
+      from { transform: translateY(0px); }
+      to { transform: translateY(-2000px); }
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.5); }
+    }
+
+    /* 4. UI Elements - Glassmorphism */
     div.stExpander {
-        border: 1px solid rgba(255,255,255,0.15);
-        border-radius: 12px;
-        background: rgba(255,255,255,0.07);
+        border: 1px solid rgba(55, 179, 111, 0.3);
+        background: rgba(0, 0, 0, 0.6);
         backdrop-filter: blur(15px);
-    }
-    
-    /* Sexy Green Buttons */
-    div.stButton > button {
-        background-color: #1a6b4a; /* Bayut Dark Green */
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 12px 24px;
-        font-weight: bold;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        box-shadow: 0 4px 15px rgba(26, 107, 74, 0.6); /* Brand-aligned glow */
-        width: 100%;
+        border-radius: 15px;
     }
 
-    /* Final Total Card */
-    .total-card {
-        border: 2px solid #37b36f; /* Light Green highlight */
-        padding: 30px;
-        border-radius: 15px;
-        text-align: center;
-        background: rgba(55, 179, 111, 0.12);
-        box-shadow: 0 0 50px rgba(55, 179, 111, 0.2);
-        backdrop-filter: blur(5px);
+    div.stButton > button {
+        background-color: #1a6b4a !important;
+        border: 1px solid #37b36f !important;
+        box-shadow: 0 0 15px rgba(55, 179, 111, 0.4);
+        letter-spacing: 2px;
     }
     </style>
 
-    <div style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;" id="particles-js"></div>
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script>
-        particlesJS("particles-js", {
-            "particles": {
-                "number": { "value": 180, "density": { "enable": true, "value_area": 800 } },
-                "color": { "value": "#ffffff" },
-                "shape": { "type": "circle" },
-                "opacity": { 
-                    "value": 1.0,  /* Full visibility base */
-                    "random": true, 
-                    "anim": { "enable": true, "speed": 1.5, "opacity_min": 0.4, "sync": false } 
-                },
-                "size": { 
-                    "value": 4.5, /* Clearer, glistening points */
-                    "random": true, 
-                    "anim": { "enable": true, "speed": 3, "size_min": 1.5, "sync": false } 
-                },
-                "line_linked": { "enable": false },
-                "move": { 
-                    "enable": true, 
-                    "speed": 0.6, 
-                    "direction": "none", 
-                    "random": true, 
-                    "straight": false, 
-                    "out_mode": "out", 
-                    "bounce": false 
-                }
-            },
-            "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": false }, "onclick": { "enable": false }, "resize": true } },
-            "retina_detect": true
-        });
-    </script>
+    <div id='stars'></div>
+    <div id='stars2'></div>
     """, unsafe_allow_html=True)
 # 3. Header & Logo
 col1, col2, col3 = st.columns([1, 2, 1])
