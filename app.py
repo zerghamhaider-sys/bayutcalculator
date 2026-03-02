@@ -4,7 +4,7 @@ import pandas as pd
 import random
 
 # 1. Page Configuration
-st.set_page_config(page_title="Bayut Studios | Estimate Builder", layout="centered")
+st.set_page_config(page_title="Bayut Studios | Price Calculator", layout="centered")
 
 # 2. Premium Design Layer (Starfield & Custom Styles)
 # This section injects the design into the app
@@ -148,7 +148,7 @@ try:
     # 7. Display Estimate Table
     if st.session_state.cart:
         st.markdown("---")
-        st.markdown("### Your Selection")
+        st.markdown("### Select Products")
         grand_total = 0
         
         # Display each item with its own Bin button
