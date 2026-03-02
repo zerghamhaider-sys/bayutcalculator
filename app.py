@@ -3,7 +3,7 @@ from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 
 # 1. Page Configuration
-st.set_page_config(page_title="Bayut Studios | Prime Quotation Engine", layout="centered")
+st.set_page_config(page_title="Bayut Studios | Price Calculator", layout="centered")
 
 # 2. Premium Design: Ultra-Visible Stars & Bold White Text
 st.markdown("""
