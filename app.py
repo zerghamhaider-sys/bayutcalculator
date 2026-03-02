@@ -6,13 +6,13 @@ import numpy as np
 # 1. Page Configuration
 st.set_page_config(page_title="Bayut Studios | Price Calculator", layout="centered")
 
-# --- FUNCTIONS DEFINED FIRST ---
+# --- FUNCTIONS ---
 def consolidate_cart(cart_items):
     consolidated = {}
     for item in cart_items:
         if isinstance(item, dict) and "name" in item:
             key = item["name"]
-            if key in consolidated
+            if key in consolidated: # ADDED MISSING COLON HERE
                 consolidated[key]["units"] += item["units"]
                 consolidated[key]["pkr"] += item["pkr"]
                 consolidated[key]["sar"] += item["sar"]
@@ -34,7 +34,7 @@ def clean_num(val):
 # --- 2. THE DESIGN: RICH NIGHT & MASSIVE STARS ---
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;700;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;700;900&family=Inter:wght@900&display=swap');
     
     .stApp { background-color: #000000; color: white !important; font-family: 'Montserrat', sans-serif; }
     
@@ -44,11 +44,10 @@ st.markdown("""
     .stApp::before {
         content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         background-image: 
-            radial-gradient(5px 5px at 10% 15%, #ffffff, rgba(0,0,0,0)),
-            radial-gradient(8px 8px at 80% 80%, #37b36f, rgba(0,0,0,0)),
-            radial-gradient(6px 6px at 40% 60%, #ffffff, rgba(0,0,0,0)),
-            radial-gradient(10px 10px at 20% 90%, #ffffff, rgba(0,0,0,0)),
-            radial-gradient(7px 7px at 85% 15%, #37b36f, rgba(0,0,0,0));
+            radial-gradient(6px 6px at 10% 15%, #ffffff, rgba(0,0,0,0)),
+            radial-gradient(10px 10px at 80% 80%, #37b36f, rgba(0,0,0,0)),
+            radial-gradient(12px 12px at 20% 90%, #ffffff, rgba(0,0,0,0)),
+            radial-gradient(8px 8px at 85% 15%, #37b36f, rgba(0,0,0,0));
         background-repeat: repeat; background-size: 1000px 1000px; opacity: 1; z-index: -1;
     }
 
@@ -56,24 +55,32 @@ st.markdown("""
     .stApp::after {
         content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         background-image: 
-            radial-gradient(4px 4px at 50% 50%, #ffffff, rgba(0,0,0,0)),
-            radial-gradient(9px 9px at 25% 25%, #37b36f, rgba(0,0,0,0)),
-            radial-gradient(5px 5px at 75% 75%, #ffffff, rgba(0,0,0,0));
+            radial-gradient(5px 5px at 50% 50%, #ffffff, rgba(0,0,0,0)),
+            radial-gradient(11px 11px at 25% 25%, #37b36f, rgba(0,0,0,0));
         background-repeat: repeat; background-size: 800px 800px; opacity: 0.8; 
         animation: stars-move 120s linear infinite; z-index: -1;
     }
 
     @keyframes stars-move { from { background-position: 0 0; } to { background-position: 0 -10000px; } }
 
-    .rich-header { text-align: center; font-weight: 900; letter-spacing: 12px; text-transform: uppercase; margin: 20px 0; text-shadow: 0 0 40px rgba(55, 179, 111, 0.8); font-size: 2.8rem; }
-    
-    div.stExpander { border: 2px solid rgba(55, 179, 111, 0.7) !important; background: rgba(0, 0, 0, 0.85) !important; backdrop-filter: blur(20px); border-radius: 12px !important; }
-    
-    div.stButton > button { background: linear-gradient(135deg, #1a6b4a 0%, #37b36f 100%) !important; color: white !important; font-weight: 900 !important; letter-spacing: 3px; border-radius: 4px; border: none; padding: 1rem; width: 100%; }
+    /* FIX: ALL BUTTONS White-out Prevention */
+    button, button:hover, button:active, button:focus {
+        color: white !important;
+        text-decoration: none !important;
+    }
 
-    /* Item Card Styling */
+    /* Bin Icon Style */
+    div[key^="del_"] button {
+        background-color: transparent !important;
+        border: none !important;
+        font-size: 1.8rem !important;
+        color: #ff4b4b !important;
+    }
+
     .item-card { background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 10px; margin-bottom: 10px; border-left: 5px solid #37b36f; }
-    .currency-sub { font-size: 0.8rem; color: #37b36f; margin: 0; }
+    .bold-currency { font-family: 'Inter', sans-serif; font-weight: 900; color: #37b36f; }
+    .rich-header { text-align: center; font-weight: 900; letter-spacing: 12px; text-transform: uppercase; margin: 20px 0; text-shadow: 0 0 40px rgba(55, 179, 111, 0.8); font-size: 2.8rem; }
+    div.stExpander { border: 2px solid rgba(55, 179, 111, 0.7) !important; background: rgba(0, 0, 0, 0.85) !important; backdrop-filter: blur(20px); border-radius: 12px !important; }
     </style>
     """, unsafe_allow_html=True)
 
@@ -90,8 +97,8 @@ try:
     conn = st.connection("gsheets", type=GSheetsConnection)
     df = conn.read(spreadsheet=url, ttl="1m")
     df.columns = [str(c).strip() for c in df.columns]
-except Exception as e:
-    st.error("Engine Syncing Error. Please check Google Sheet columns.")
+except Exception:
+    st.error("Engine Syncing Error.")
     st.stop()
 
 # 6. Service Selector
@@ -113,7 +120,7 @@ with st.expander("🚀 CONFIGURE YOUR PROJECT SCOPE", expanded=True):
         st.session_state.cart = consolidate_cart(st.session_state.cart)
         st.rerun()
 
-# 7. Current Scope & Multi-Currency Breakdown
+# 7. Current Scope Display
 if st.session_state.cart:
     st.markdown("<br><h3>📋 CURRENT SCOPE</h3>", unsafe_allow_html=True)
     totals = {"pkr": 0, "sar": 0, "aed": 0}
@@ -123,19 +130,21 @@ if st.session_state.cart:
         totals["sar"] += item["sar"]
         totals["aed"] += item["aed"]
         
-        with st.container():
+        col_text, col_bin = st.columns([4, 1])
+        with col_text:
             st.markdown(f"""
             <div class="item-card">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div>
                         <b style="font-size: 1.1rem;">{item['name']} (x{item['units']})</b>
-                        <p class="currency-sub">SAR {item['sar']:,.2f} | AED {item['aed']:,.2f}</p>
+                        <p style="margin:0;"><span class="bold-currency">SAR {item['sar']:,.2f}</span> | <span class="bold-currency">AED {item['aed']:,.2f}</span></p>
                     </div>
-                    <b style="font-size: 1.2rem; color: #FFF;">PKR {item['pkr']:,.0f}</b>
+                    <b style="font-size: 1.4rem; color: #FFF;">PKR {item['pkr']:,.0f}</b>
                 </div>
             </div>
             """, unsafe_allow_html=True)
-            if st.button(f"Remove {i}", key=f"del_{i}", help="Remove item"):
+        with col_bin:
+            if st.button("🗑️", key=f"del_{i}"):
                 st.session_state.cart.pop(i); st.rerun()
 
     # 8. Global Valuation Card
@@ -144,11 +153,11 @@ if st.session_state.cart:
             <p style="letter-spacing: 5px; color: #37b36f; font-weight: 700;">✦ TOTAL VALUATION ✦</p>
             <h1 style="color: white; font-size: 3.8rem; font-weight: 900; margin: 0;">PKR {totals['pkr']:,.0f}</h1>
             <div style="display: flex; justify-content: center; gap: 60px; border-top: 2px solid #37b36f; padding-top: 20px; margin-top: 20px;">
-                <div><p style="color: #37b36f; font-size: 0.9rem;">SAR</p><h2 style="color:white; font-size: 1.8rem;">{totals['sar']:,.2f}</h2></div>
-                <div><p style="color: #37b36f; font-size: 0.9rem;">AED</p><h2 style="color:white; font-size: 1.8rem;">{totals['aed']:,.2f}</h2></div>
+                <div><p style="color: #37b36f; font-size: 0.9rem; font-weight:900;">SAR</p><h2 style="color:white; font-size: 2.2rem; font-weight:900;">{totals['sar']:,.2f}</h2></div>
+                <div><p style="color: #37b36f; font-size: 0.9rem; font-weight:900;">AED</p><h2 style="color:white; font-size: 2.2rem; font-weight:900;">{totals['aed']:,.2f}</h2></div>
             </div>
         </div>
     """, unsafe_allow_html=True)
     
-    if st.button("🗑️ CLEAR ALL QUOTATION"):
+    if st.button("🗑️ CLEAR ALL QUOTATION", use_container_width=True):
         st.session_state.cart = []; st.rerun()
