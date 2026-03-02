@@ -31,14 +31,14 @@ def clean_num(val):
         return 0.0
     except: return 0.0
 
-# --- 2. THE DESIGN: ULTRA-STARRY & BOLD CURRENCY ---
+## 2. THE DESIGN: ULTRA-STARRY & FIXED BUTTONS
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;700;900&family=Inter:wght@700;900&display=swap');
     
     .stApp { background-color: #000000; color: white !important; font-family: 'Montserrat', sans-serif; }
     
-    /* 1. Global Label & Text Visibility Fix */
+    /* Global Label Visibility */
     label, .stMarkdown p, .stExpander p { 
         color: #FFFFFF !important; 
         font-weight: 700 !important; 
@@ -46,7 +46,7 @@ st.markdown("""
         letter-spacing: 2px;
     }
 
-    /* 2. MASSIVE STAR ENGINE */
+    /* MASSIVE STAR ENGINE */
     .stApp::before {
         content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         background-image: 
@@ -60,14 +60,53 @@ st.markdown("""
     }
     @keyframes stars-move { from { background-position: 0 0; } to { background-position: 0 -10000px; } }
 
-    /* 3. Input Styling (Fixed White-Out) */
+    /* FIX: Input Boxes Dark Mode */
     div[data-baseweb="select"] > div, div[data-baseweb="popover"] > div, .stSelectbox div, .stNumberInput input {
         background-color: #0a0a0a !important;
         color: white !important;
         border: 1px solid rgba(55, 179, 111, 0.4) !important;
     }
 
-    /* 4. Sleek Item List (Glassmorphism) */
+    /* FIX: ALL BUTTONS - Prevent White-out on Click/Hover */
+    button {
+        color: white !important;
+    }
+    
+    /* Main Action Buttons (Add to Quotation / Clear All) */
+    div.stButton > button:not([key^="del_"]) {
+        background: linear-gradient(135deg, #1a6b4a 0%, #37b36f 100%) !important;
+        border: none !important;
+        font-weight: 900 !important;
+        letter-spacing: 3px;
+        padding: 1rem !important;
+        width: 100%;
+        border-radius: 8px !important;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.5) !important;
+    }
+    
+    div.stButton > button:not([key^="del_"]):hover, 
+    div.stButton > button:not([key^="del_"]):active,
+    div.stButton > button:not([key^="del_"]):focus {
+        background: #37b36f !important; /* Solid green on hover */
+        color: white !important;
+        transform: translateY(-2px);
+    }
+
+    /* Bin Icon Fix (No White-out) */
+    div[key^="del_"] button {
+        background-color: transparent !important;
+        color: #ff4b4b !important;
+        border: none !important;
+        font-size: 1.8rem !important;
+    }
+    
+    div[key^="del_"] button:hover, div[key^="del_"] button:focus {
+        color: #ff3333 !important;
+        background-color: transparent !important;
+        transform: scale(1.2);
+    }
+
+    /* Item Card & Text Styling */
     .item-card {
         background: rgba(255, 255, 255, 0.05);
         border: 1px solid rgba(255, 255, 255, 0.1);
@@ -78,29 +117,10 @@ st.markdown("""
         border-left: 6px solid #37b36f;
     }
     .bold-currency { font-family: 'Inter', sans-serif; font-weight: 900; color: #37b36f; letter-spacing: 1px; }
-
-    /* 5. FIXED: Bin Button (No White-Out) */
-    div[key^="del_"] button {
-        background-color: transparent !important;
-        color: #ff4b4b !important;
-        border: none !important;
-        font-size: 1.8rem !important;
-        transition: 0.3s;
-        margin-top: 10px;
-    }
-    div[key^="del_"] button:hover {
-        transform: scale(1.2);
-        color: #ff3333 !important;
-    }
-
-    /* 6. Header Styling */
     .rich-header { text-align: center; font-weight: 900; letter-spacing: 14px; text-transform: uppercase; margin: 25px 0; text-shadow: 0 0 35px rgba(55, 179, 111, 0.7); font-size: 2.5rem; }
-    
-    /* 7. Total Valuation Styling */
     .grand-total-text { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 4.2rem; margin: 0; color: white; }
     </style>
     """, unsafe_allow_html=True)
-
 # 3. Logo & Brand
 st.image("https://i.ibb.co/LzsV9Z6j/f774cc00-9f2e-4130-9644-1bddb2d6ae50.jpg")
 st.markdown("<h1 class='rich-header'>Price Calculator</h1>", unsafe_allow_html=True)
