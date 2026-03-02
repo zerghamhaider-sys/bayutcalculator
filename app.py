@@ -31,94 +31,92 @@ def clean_num(val):
         return 0.0
     except: return 0.0
 
-# --- 2. THE DESIGN: REINFORCED EXPANDER & STAR ENGINE ---
+# --- 2. THE DESIGN: GLASSBOXES & IMPROVED STARS ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;700;900&family=Inter:wght@900&display=swap');
     
-    .stApp { background-color: #000000; color: white !important; font-family: 'Montserrat', sans-serif; }
-    
-    /* Global Label Visibility */
-    label, .stMarkdown p { 
-        color: #FFFFFF !important; 
-        font-weight: 700 !important; 
-        text-transform: uppercase; 
-        letter-spacing: 2px;
+    .stApp { 
+        background-color: #000000; 
+        color: white !important; 
+        font-family: 'Montserrat', sans-serif; 
     }
-
-    /* MASSIVE STAR ENGINE */
+    
+    /* 1. FIXED STAR ENGINE (High Visibility) */
     .stApp::before {
         content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background-image: 
-            radial-gradient(6px 6px at 10% 15%, #ffffff, rgba(0,0,0,0)),
-            radial-gradient(12px 12px at 80% 80%, #37b36f, rgba(0,0,0,0)),
-            radial-gradient(14px 14px at 20% 90%, #ffffff, rgba(0,0,0,0)),
-            radial-gradient(10px 10px at 85% 15%, #37b36f, rgba(0,0,0,0));
-        background-repeat: repeat; background-size: 1100px 1100px; opacity: 1; z-index: -1;
+        background: 
+            radial-gradient(4px 4px at 10% 10%, #ffffff, transparent),
+            radial-gradient(8px 8px at 20% 40%, #ffffff, transparent),
+            radial-gradient(6px 6px at 40% 70%, #37b36f, transparent),
+            radial-gradient(12px 12px at 60% 20%, #ffffff, transparent),
+            radial-gradient(9px 9px at 80% 50%, #37b36f, transparent),
+            radial-gradient(5px 5px at 90% 90%, #ffffff, transparent);
+        background-size: 800px 800px;
+        animation: stars-move 150s linear infinite;
+        z-index: -1;
     }
     @keyframes stars-move { from { background-position: 0 0; } to { background-position: 0 -10000px; } }
 
-    /* --- EXPANDER HEADER FIX (PREVENT WHITE-OUT) --- */
-    /* This targets the "Configure Your Project Scope" bar */
-    div.stExpander summary {
-        background-color: rgba(55, 179, 111, 0.1) !important;
-        border: 1px solid rgba(55, 179, 111, 0.5) !important;
-        color: white !important;
+    /* 2. RETURN TO GLASS BOX DESIGN (No Green Tint) */
+    div.stExpander {
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+        backdrop-filter: blur(15px) !important;
         border-radius: 12px !important;
     }
-
-    div.stExpander summary:hover, div.stExpander summary:focus, div.stExpander summary:active {
-        background-color: #1a6b4a !important; /* Stays dark green on hover */
-        color: white !important;
-    }
     
-    div.stExpander summary p {
+    /* 3. EXPANDER HEADER FIX (No White-Out) */
+    div.stExpander summary {
+        background-color: transparent !important;
         color: white !important;
-        font-weight: 900 !important;
+    }
+    div.stExpander summary:hover {
+        background-color: rgba(255, 255, 255, 0.1) !important;
     }
 
-    /* --- BUTTONS FIX --- */
+    /* 4. BUTTONS FIX (Stay Dark/Rich) */
     button, p { color: white !important; }
 
     div.stButton > button:not([key^="del_"]) {
         background: linear-gradient(135deg, #1a6b4a 0%, #37b36f 100%) !important;
         border: none !important;
-        color: white !important;
         font-weight: 900 !important;
         letter-spacing: 3px;
         padding: 1rem !important;
         border-radius: 8px !important;
     }
-
     div.stButton > button:not([key^="del_"]):hover {
         background: #37b36f !important;
-        color: white !important;
-        box-shadow: 0 0 20px rgba(55, 179, 111, 0.6) !important;
+        box-shadow: 0 0 20px rgba(55, 179, 111, 0.5) !important;
     }
 
-    /* Bin Icon Persistence */
+    /* 5. ITEM CARDS (Sleek Glass) */
+    .item-card { 
+        background: rgba(255, 255, 255, 0.03); 
+        padding: 20px; 
+        border-radius: 10px; 
+        margin-bottom: 10px; 
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .bold-currency { font-family: 'Inter', sans-serif; font-weight: 900; color: #37b36f; }
+    .rich-header { text-align: center; font-weight: 900; letter-spacing: 12px; text-transform: uppercase; margin: 20px 0; text-shadow: 0 0 40px rgba(55, 179, 111, 0.8); font-size: 2.8rem; }
+    
+    /* Input Boxes Dark Mode */
+    div[data-baseweb="select"] > div, .stSelectbox div, .stNumberInput input {
+        background-color: #000000 !important;
+        color: white !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    }
+
+    /* Bin Icon Fix */
     div[key^="del_"] button {
         background-color: transparent !important;
         border: none !important;
         font-size: 2rem !important;
         color: #ff4b4b !important;
     }
-    div[key^="del_"] button:hover {
-        color: #ff3333 !important;
-        background-color: transparent !important;
-        transform: scale(1.2);
-    }
-
-    /* Dropdown/Input Dark Mode */
-    div[data-baseweb="select"] > div, div[data-baseweb="popover"] > div, .stSelectbox div, .stNumberInput input {
-        background-color: #0a0a0a !important;
-        color: white !important;
-        border: 1px solid rgba(55, 179, 111, 0.4) !important;
-    }
-
-    .item-card { background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 10px; margin-bottom: 10px; border-left: 5px solid #37b36f; }
-    .bold-currency { font-family: 'Inter', sans-serif; font-weight: 900; color: #37b36f; }
-    .rich-header { text-align: center; font-weight: 900; letter-spacing: 12px; text-transform: uppercase; margin: 20px 0; text-shadow: 0 0 40px rgba(55, 179, 111, 0.8); font-size: 2.8rem; }
     </style>
     """, unsafe_allow_html=True)
 
@@ -187,10 +185,10 @@ if st.session_state.cart:
 
     # 8. Global Valuation Card
     st.markdown(f"""
-        <div style="border: 3px solid #37b36f; padding: 40px; border-radius: 20px; background: rgba(55, 179, 111, 0.1); text-align: center; margin-top: 40px;">
+        <div style="border: 1px solid rgba(255,255,255,0.2); padding: 40px; border-radius: 20px; background: rgba(55, 179, 111, 0.1); text-align: center; margin-top: 40px; backdrop-filter: blur(10px);">
             <p style="letter-spacing: 5px; color: #37b36f; font-weight: 700;">✦ TOTAL VALUATION ✦</p>
             <h1 style="color: white; font-size: 3.8rem; font-weight: 900; margin: 0;">PKR {totals['pkr']:,.0f}</h1>
-            <div style="display: flex; justify-content: center; gap: 60px; border-top: 2px solid #37b36f; padding-top: 20px; margin-top: 20px;">
+            <div style="display: flex; justify-content: center; gap: 60px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; margin-top: 20px;">
                 <div><p style="color: #37b36f; font-size: 0.9rem; font-weight:900;">SAR</p><h2 style="color:white; font-size: 2.2rem; font-weight:900;">{totals['sar']:,.2f}</h2></div>
                 <div><p style="color: #37b36f; font-size: 0.9rem; font-weight:900;">AED</p><h2 style="color:white; font-size: 2.2rem; font-weight:900;">{totals['aed']:,.2f}</h2></div>
             </div>
